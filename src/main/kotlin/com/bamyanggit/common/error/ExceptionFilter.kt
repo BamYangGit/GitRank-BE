@@ -25,6 +25,7 @@ class ExceptionFilter(
                     is CustomException -> toErrorResponse(it, response)
                     else -> toErrorResponse(InternalServerErrorException, response)
                 }
+                it.printStackTrace()
             }
     }
 

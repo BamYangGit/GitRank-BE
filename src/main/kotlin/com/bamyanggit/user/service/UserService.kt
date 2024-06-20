@@ -2,13 +2,9 @@ package com.bamyanggit.user.service
 
 import com.bamyanggit.common.feign.client.GithubApiClient
 import com.bamyanggit.common.feign.client.GithubOAuthClient
-import com.bamyanggit.common.feign.client.dto.TokenResponse
 import com.bamyanggit.user.entity.User
 import com.bamyanggit.user.entity.UserRepository
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.bamyanggit.user.presentation.dto.response.TokenResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -22,26 +18,22 @@ class UserService(
     private val githubOAuthClient: GithubOAuthClient,
     private val githubApiClient: GithubApiClient,
 ) {
-    private val snakeCaseObjectMapper: ObjectMapper = jacksonObjectMapper().apply {
-        propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
-    }
 
     fun signUp(code: String): TokenResponse {
-        val jsonString = githubOAuthClient.getAccessToken(clientId, clientSecret, code)
-        val accessToken = jsonToTokenResponse(jsonString).accessToken
+        val feignTokenResponse = githubOAuthClient.getAccessToken(clientId, clientSecret, code)
 
-        println(githubApiClient.getInfo("token $accessToken"))
+        val feignUserInfo = githubApiClient.getUserInfo("token ${feignTokenResponse.accessToken}")
 
+        // signup api 다시 짜기
         userRepository.save(
             User(
-                email =
+                accountId = feignUserInfo.login!!,
+                imageUrl = feignUserInfo.avatarUrl ?: "",
+                followerCount = feignUserInfo.followers,
+                followingCount = feignUserInfo.following,
             )
         )
 
-        return TokenResponse(accessToken)
-    }
-
-    private fun jsonToTokenResponse(jsonString: String): TokenResponse {
-        return snakeCaseObjectMapper.readValue(jsonString)
+        return TokenResponse(feignTokenResponse.accessToken!!)
     }
 }

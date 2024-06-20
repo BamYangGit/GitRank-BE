@@ -1,7 +1,7 @@
 package com.bamyanggit.user.presentation
 
-import com.bamyanggit.common.feign.client.dto.TokenResponse
 import com.bamyanggit.user.presentation.dto.request.CodeRequest
+import com.bamyanggit.user.presentation.dto.response.TokenResponse
 import com.bamyanggit.user.service.UserService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

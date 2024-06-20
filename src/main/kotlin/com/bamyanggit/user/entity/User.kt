@@ -12,13 +12,26 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
-    val email: String,
+    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
+    val accountId: String,
 
+    imageUrl: String,
+    followerCount: Int = 0,
+    followingCount: Int = 0,
     targetCommit: Int = 0,
     currentTotalCommit: Int = 0,
     schoolId: Int,
 ) {
+    @Column(columnDefinition = "VARCHAR(1000)", nullable = false)
+    var imageUrl: String = imageUrl
+        private set
+
+    var followerCount: Int = followerCount
+        private set
+
+    var followingCount: Int = followingCount
+        private set
+
     var targetCommit: Int = targetCommit
         private set
 

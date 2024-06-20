@@ -1,5 +1,6 @@
 package com.bamyanggit.common.feign.client
 
+import com.bamyanggit.common.feign.client.dto.FeignTokenResponse
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,5 +13,5 @@ interface GithubOAuthClient {
         @RequestParam("client_id") clientId: String,
         @RequestParam("client_secret") clientSecret: String,
         @RequestParam("code") code: String
-    ): String
+    ): FeignTokenResponse
 }

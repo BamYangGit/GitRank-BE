@@ -18,9 +18,11 @@ class User(
     imageUrl: String,
     followerCount: Int = 0,
     followingCount: Int = 0,
+    todayCommit: Int = 0,
+    yesterdayCommit: Int = 0,
     targetCommit: Int = 0,
     currentTotalCommit: Int = 0,
-    schoolId: Int,
+    schoolId: Int? = null,
 ) {
     @Column(columnDefinition = "VARCHAR(1000)", nullable = false)
     var imageUrl: String = imageUrl
@@ -32,12 +34,17 @@ class User(
     var followingCount: Int = followingCount
         private set
 
+    var todayCommit: Int = todayCommit
+        private set
+
+    var yesterdayCommit: Int = todayCommit
+        private set
     var targetCommit: Int = targetCommit
         private set
 
     var currentTotalCommit: Int = currentTotalCommit
         private set
 
-    var schoolId: Int = schoolId
+    var schoolId: Int? = schoolId
         private set
 }

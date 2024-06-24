@@ -2,6 +2,7 @@ package com.bamyanggit.user.service
 
 import com.bamyanggit.common.feign.client.GithubApiClient
 import com.bamyanggit.common.feign.client.GithubOAuthClient
+import com.bamyanggit.common.jsoup.GithubContributionsCrawler
 import com.bamyanggit.user.entity.User
 import com.bamyanggit.user.entity.UserRepository
 import com.bamyanggit.user.presentation.dto.response.TokenResponse
@@ -17,20 +18,24 @@ class UserService(
     private val clientSecret: String,
     private val githubOAuthClient: GithubOAuthClient,
     private val githubApiClient: GithubApiClient,
+    private val githubContributionsCrawler: GithubContributionsCrawler,
 ) {
 
     fun signUp(code: String): TokenResponse {
         val feignTokenResponse = githubOAuthClient.getAccessToken(clientId, clientSecret, code)
-
         val feignUserInfo = githubApiClient.getUserInfo("token ${feignTokenResponse.accessToken}")
 
-        // signup api 다시 짜기
+        val contributions = githubContributionsCrawler.getContributionCount(feignUserInfo.login!!)
+
         userRepository.save(
             User(
-                accountId = feignUserInfo.login!!,
+                accountId = feignUserInfo.login,
                 imageUrl = feignUserInfo.avatarUrl ?: "",
-                followerCount = feignUserInfo.followers,
-                followingCount = feignUserInfo.following,
+                followerCount = feignUserInfo.followers?.toIntOrNull() ?: 0,
+                followingCount = feignUserInfo.following?.toIntOrNull() ?: 0,
+                currentTotalCommit = contributions.totalCommit,
+                todayCommit = contributions.todayCommit,
+                yesterdayCommit = contributions.yesterdayCommit,
             )
         )
 

@@ -1,5 +1,6 @@
-package com.bamyanggit.common.feign
+package com.bamyanggit.common.config
 
+import com.bamyanggit.common.feign.FeignClientErrorDecoder
 import feign.codec.ErrorDecoder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.cloud.openfeign.EnableFeignClients

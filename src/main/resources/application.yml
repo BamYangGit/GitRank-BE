@@ -7,11 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
-
-  jwt:
-    access_exp: ${ACCESS_EXP:3600}
-    secret_key: ${SECRET_KEY:secret}
+      ddl-auto: update
 
   security:
     oauth2:

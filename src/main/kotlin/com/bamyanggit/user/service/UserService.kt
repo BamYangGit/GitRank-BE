@@ -5,8 +5,10 @@ import com.bamyanggit.common.feign.client.GithubOAuthClient
 import com.bamyanggit.common.jsoup.GithubContributionsCrawler
 import com.bamyanggit.user.entity.User
 import com.bamyanggit.user.entity.UserRepository
+import com.bamyanggit.user.presentation.dto.response.MyInfoResponse
 import com.bamyanggit.user.presentation.dto.response.TokenResponse
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -40,5 +42,22 @@ class UserService(
         )
 
         return TokenResponse(feignTokenResponse.accessToken!!)
+    }
+
+    fun getMyInfo(): MyInfoResponse {
+        val user = userRepository.findByIdOrNull(1)
+            ?: throw RuntimeException()
+
+        return MyInfoResponse(
+            id = user.id,
+            accountId = user.accountId,
+            currentTotalCommit = user.currentTotalCommit,
+            followerCount = user.followerCount,
+            followingCount = user.followingCount,
+            imageUrl = user.imageUrl,
+            targetCommit = user.targetCommit,
+            todayCommit = user.todayCommit,
+            yesterdayCommit = user.yesterdayCommit,
+        )
     }
 }
